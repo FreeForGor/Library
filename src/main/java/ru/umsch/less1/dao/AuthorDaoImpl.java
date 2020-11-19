@@ -64,7 +64,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public int deleteAll() {
-        return namedJdbc.getJdbcOperations().update("DELETE FROM authors");
+        return namedJdbc.getJdbcOperations().update("TRUNCATE authors");
     }
 
     @Override

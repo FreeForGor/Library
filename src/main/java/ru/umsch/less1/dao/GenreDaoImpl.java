@@ -13,6 +13,7 @@ import ru.umsch.less1.model.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class GenreDaoImpl implements GenreDao {
@@ -35,7 +36,7 @@ public class GenreDaoImpl implements GenreDao {
         param.addValue("g_name", genre.getGenreName());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedJdbc.update("INSERT INTO genres (genre_name) VALUES (:g_name)", param, keyHolder, new String[] { "id" });
-        genre.setId(keyHolder.getKey().longValue());
+        genre.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return genre;
     }
 
@@ -61,7 +62,7 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public int deleteAll() {
         namedJdbc.getJdbcOperations().update("UPDATE books SET genre_id = null");
-        return namedJdbc.getJdbcOperations().update("DELETE FROM genres");
+        return namedJdbc.getJdbcOperations().update("TRUNCATE genres");
     }
 
     private static class GenreMapper implements RowMapper<Genre> {

@@ -14,10 +14,7 @@ import ru.umsch.less1.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class BookDaoImpl implements BookDao {
@@ -69,6 +66,7 @@ public class BookDaoImpl implements BookDao {
                 "LEFT OUTER JOIN authors AS a ON ba.authors_id = a.id " +
                 "WHERE b.id = :id", param, new BookExtractor());
         Book result = null;
+        assert books != null;
         if (!books.isEmpty()) {
             result = books.get(0);
         }
@@ -97,7 +95,7 @@ public class BookDaoImpl implements BookDao {
         namedJdbc.update(
                 "INSERT INTO books (title, genre_id) " +
                         "VALUES (:t_name, :g_id)", param, keyHolder, new String[] { "id" });
-        Long bookId = keyHolder.getKey().longValue();
+        Long bookId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         for (Author author : book.getAuthors()) {
             MapSqlParameterSource param2 = new MapSqlParameterSource();
@@ -131,11 +129,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public int deleteAll() {
-        namedJdbc.getJdbcOperations().update("DELETE FROM books_authors");
-        return namedJdbc.getJdbcOperations().update("DELETE FROM books");
+        namedJdbc.getJdbcOperations().update("TRUNCATE books_authors");
+        return namedJdbc.getJdbcOperations().update("TRUNCATE books");
     }
 
-    private static class BookExtractor implements ResultSetExtractor<List<Book>> {
+    private static class
+    BookExtractor implements ResultSetExtractor<List<Book>> {
 
         Map<Long, Book> bookMap = new HashMap<>();
 

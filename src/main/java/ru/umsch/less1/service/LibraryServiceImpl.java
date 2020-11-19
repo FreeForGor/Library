@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class LibraryServiceImpl implements LibraryService {
 
-    private BookDao bookDao;
-    private AuthorDao authorDao;
-    private GenreDaoImpl genreDao;
+    private final BookDao bookDao;
+    private final AuthorDao authorDao;
+    private final GenreDaoImpl genreDao;
 
     @Autowired
     public LibraryServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDaoImpl genreDao) {

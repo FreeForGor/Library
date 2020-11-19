@@ -15,6 +15,7 @@ public class Book {
     private Genre genre;
 
     public Book(String title, Genre genre, List<Author> authorList) {
+
         this.authors = authorList;
         this.genre = genre;
         this.title = title;

@@ -27,103 +27,103 @@ public class LibraryCli {
         this.libraryService = libraryService;
     }
 
-    @ShellMethod(value = "Show all authors names", key = "all-names")
+    @ShellMethod(value = "Показать всех авторов", key = "all-names")
     public List<String> getAllAuthorsNames() {
         return libraryService.getAllAuthorsNames();
     }
 
-    @ShellMethod(value = "Show all books", key = "all-books")
+    @ShellMethod(value = "Показать все книги", key = "all-books")
     public String getAllBooks() {
         return getTableFromList(libraryService.getAllBooks());
     }
 
-    @ShellMethod(value = "Show all genres", key = "all-genres")
+    @ShellMethod(value = "Показать все жанры", key = "all-genres")
     public List<String> getAllGenres() {
         return libraryService.getAllGenres();
     }
 
-    @ShellMethod(value = "Get books by authors name", key = "book-of")
+    @ShellMethod(value = "Поиск книг по имени атора", key = "book-of")
     public String getBooksByAuthorsName(
-            @ShellOption(help = "authors name") String name) {
+            @ShellOption(help = "имя автора") String name) {
         return getTableFromList(libraryService.getBooksByAuthorsName(name));
     }
 
-    @ShellMethod(value = "Add new book, use comma as delimiter for authors", key = "add-book")
+    @ShellMethod(value = "Добавлание новых книг", key = "add-book")
     public String addNewBook(
-            @ShellOption(help = "genre") String genreName,
-            @ShellOption(help = "title") String title,
-            @ShellOption(help = "authors, use comma as delimiter ") String authors) {
+            @ShellOption(help = "жанр") String genreName,
+            @ShellOption(help = "название") String title,
+            @ShellOption(help = "автор") String authors) {
 
         String[] authorsArr = authors.split(",");
         List<Author> authorList = Arrays.stream(authorsArr).map(Author::new).collect(Collectors.toList());
         Genre genre = new Genre(genreName);
         boolean isSuccessful = libraryService.addNewBook(new Book(title, genre, authorList));
         if (isSuccessful) {
-            return "New book was added successfully";
+            return "Новая книга добавлена";
         } else {
-            return "Book already exists";
+            return "Накая книга уже есть!";
         }
     }
 
-    @ShellMethod(value = "Add new genre", key = "add-genre")
+    @ShellMethod(value = "Добавление нового жанра", key = "add-genre")
     public String addNewGenre(
-            @ShellOption(help = "genre name") String genre) {
+            @ShellOption(help = "Название жанра") String genre) {
         boolean isSuccessful = libraryService.addNewGenre(new Genre(genre));
         if (isSuccessful) {
-            return "New genre was added successfully";
+            return "Новый жанр добавлен";
         } else {
-            return "Genre already exists";
+            return "Жанр уже существует";
         }
     }
 
-    @ShellMethod(value = "Add new author", key = "add-author")
+    @ShellMethod(value = "Добавение нового автора", key = "add-author")
     public void addNewAuthor(
-            @ShellOption(help = "author name") String authorName) {
+            @ShellOption(help = "имя автора") String authorName) {
         libraryService.addNewAuthor(new Author(authorName));
     }
 
-    @ShellMethod(value = "Update book title", key = "upd-title-id")
+    @ShellMethod(value = "Обновление названия книги по id", key = "upd-title-id")
     public String updateBookTitleById(
             @ShellOption(help = "id") Long id,
-            @ShellOption(help = "new title") String newTitle) {
+            @ShellOption(help = "новое название") String newTitle) {
         boolean isSuccessful = libraryService.updateBookTitleById(id, newTitle);
         if (isSuccessful) {
-            return "Title was updated successfully";
+            return "Название обновлено";
         } else {
-            return "Book doesn't exist";
+            return "Книги не существует";
         }
     }
 
-    @ShellMethod(value = "Delete book", key = "del-book")
+    @ShellMethod(value = "Удалиние книги", key = "del-book")
     public String deleteBookById(
-            @ShellOption(help = "id of book to delete") Long id) {
+            @ShellOption(help = "id книги для удаления") Long id) {
         boolean isSuccessful = libraryService.deleteBookById(id);
         if (isSuccessful) {
-            return "Book was deleted successfully";
+            return "Книга удалена";
         } else {
-            return "Book doesn't exist";
+            return "Книги не существует";
         }
     }
 
-    @ShellMethod(value = "Delete author", key = "del-auth")
+    @ShellMethod(value = "Удалить автора", key = "del-auth")
     public String deleteAuthorById(
-            @ShellOption(help = "id author to delete") Long id) {
+            @ShellOption(help = "id автора на удаление") Long id) {
         boolean isSuccessful = libraryService.deleteAuthorById(id);
         if (isSuccessful) {
-            return "Author was deleted successfully";
+            return "Автор удален";
         } else {
-            return "Author doesn't exist";
+            return "Автора не существует";
         }
     }
 
-    @ShellMethod(value = "Delete genre", key = "del-genre")
+    @ShellMethod(value = "Удалить жанр", key = "del-genre")
     public String deleteGenre(
-            @ShellOption(help = "genre to delete") String genreName) {
+            @ShellOption(help = "жанр на удаление") String genreName) {
         boolean isSuccessful = libraryService.deleteGenre(genreName);
         if (isSuccessful) {
-            return "Genre was deleted successfully";
+            return "Жанр удален";
         } else {
-            return "Genre doesn't exist";
+            return "Жанра не существует";
         }
     }
 
@@ -131,17 +131,17 @@ public class LibraryCli {
     private String getTableFromList(List<Book> books) {
         TableModelBuilder<String> modelBuilder = new TableModelBuilder<>();
         modelBuilder.addRow()
-                .addValue("Book id")
-                .addValue("Author(s)")
-                .addValue("Title")
-                .addValue("Genre");
+                .addValue("id ")
+                .addValue("Автор")
+                .addValue("Название")
+                .addValue("Жанр");
         books.forEach(book -> {
             Optional<String> authors = book.getAuthors().stream().map(Author::getName).reduce((a, b) -> a + ", " + b);
             modelBuilder.addRow()
-                    .addValue(String.valueOf(book.getId()))
-                    .addValue(authors.orElse("no author defined"))
-                    .addValue(book.getTitle())
-                    .addValue(book.getGenre().getGenreName());
+                    .addValue((book.getId())+" ")
+                    .addValue(authors.orElse("автор не указан")+" ")
+                    .addValue(book.getTitle()+" ")
+                    .addValue(book.getGenre().getGenreName()+" ");
         });
         TableModel model = modelBuilder.build();
 
