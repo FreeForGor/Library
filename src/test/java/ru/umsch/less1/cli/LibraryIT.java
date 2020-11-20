@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.shell.Shell;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import ru.umsch.less1.dao.AuthorDaoImpl;
 import ru.umsch.less1.dao.BookDaoImpl;
 import ru.umsch.less1.dao.GenreDaoImpl;
@@ -70,7 +71,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "all-books");
 
         String result = res.toString();
-        String expected = "Book idAuthor(s)  Title    Genre     \n";
+        String expected = "id Автор  Название    Жанр     \n";
 
         assertThat(result).contains(expected,
                 String.valueOf(book1.getId()), TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1,
@@ -98,7 +99,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "book-of " + TEST_AUTHOR_2);
 
         String result = res.toString();
-        String expected = "Book idAuthor(s)  Title    Genre     \n";
+        String expected = "id Автор  Название    Жанр     \n";
 
         assertThat(result).contains(expected,
                 String.valueOf(book2.getId()), TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
@@ -124,7 +125,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "add-book " + TEST_GENRE_1 + " " + TEST_TITLE_1 + " " + TEST_AUTHOR_1);
 
         String result = res.toString();
-        String expected = "Book already exists";
+        String expected = "Книга уже существует";
 
         assertThat(result).isEqualTo(expected);
     }
@@ -145,7 +146,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "add-genre " + TEST_GENRE_1);
 
         String result = res.toString();
-        String expected = "Genre already exists";
+        String expected = "Жанр уже существует";
 
         assertThat(result).isEqualTo(expected);
     }
@@ -175,7 +176,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "upd-title-id " + 100 + " " + TEST_TITLE_2);
 
         String result = res.toString();
-        String expected = "Book doesn't exist";
+        String expected = "Такой книги нет";
 
         assertThat(result).isEqualTo(expected);
     }
@@ -200,7 +201,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "del-book " + 100);
 
         String result = res.toString();
-        String expected = "Book doesn't exist";
+        String expected = "Такой книги нет";
 
         assertThat(result).isEqualTo(expected);
     }
@@ -224,7 +225,7 @@ public class LibraryIT {
         Object res = shell.evaluate(() -> "del-auth " + 100);
 
         String result = res.toString();
-        String expected = "Author doesn't exist";
+        String expected = "Такого автора нет";
 
         assertThat(result).isEqualTo(expected);
     }

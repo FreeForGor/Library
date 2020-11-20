@@ -138,10 +138,10 @@ public class LibraryCli {
         books.forEach(book -> {
             Optional<String> authors = book.getAuthors().stream().map(Author::getName).reduce((a, b) -> a + ", " + b);
             modelBuilder.addRow()
-                    .addValue((book.getId())+" ")
-                    .addValue(authors.orElse("автор не указан")+" ")
-                    .addValue(book.getTitle()+" ")
-                    .addValue(book.getGenre().getGenreName()+" ");
+                    .addValue((book.getId())+"  ")
+                    .addValue(authors.orElse("автор не указан")+"  ")
+                    .addValue(book.getTitle()+"  ")
+                    .addValue(book.getGenre().getGenreName()+"  ");
         });
         TableModel model = modelBuilder.build();
 
