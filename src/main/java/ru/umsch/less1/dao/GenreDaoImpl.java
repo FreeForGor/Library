@@ -62,7 +62,7 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public int deleteAll() {
         namedJdbc.getJdbcOperations().update("UPDATE books SET genre_id = null");
-        return namedJdbc.getJdbcOperations().update("TRUNCATE genres");
+        return namedJdbc.getJdbcOperations().update("DELETE FROM genres");
     }
 
     private static class GenreMapper implements RowMapper<Genre> {

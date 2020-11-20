@@ -11,6 +11,7 @@ import ru.umsch.less1.model.Author;
 import ru.umsch.less1.model.Book;
 import ru.umsch.less1.model.Genre;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,7 @@ public class BookDaoTest {
     private static final String TEST_AUTHOR_2 = "testAuthor2";
     private static final String TEST_GENRE_1 = "testGenre";
     private static final String TEST_GENRE_2 = "testGenre2";
-    private static final String TEST_GENRE_3 = "testGenre3";
-    private static final String TEST_AUTHOR_3 = "testAuthor3";
+
 
     @Autowired
     private BookDaoImpl bookDao;
@@ -47,7 +47,8 @@ public class BookDaoTest {
     }
 
     @Test
-    public void addNewBookTest() throws Exception {
+    public void addNewBookTest()  {
+
         Book book = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
 
         List<Book> books = bookDao.getAllBooks();
@@ -58,14 +59,11 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getAllBooksTest() throws Exception {
-        List<Book> books = bookDao.getAllBooks();
-        assertThat(books).isEmpty();
-
+    public void getAllBooksTest()  {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
-        books = bookDao.getAllBooks();
+        List<Book> books = bookDao.getAllBooks();
         assertThat(books)
                 .isNotEmpty()
                 .hasSize(2)
@@ -73,7 +71,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getAllTitlesTest() throws Exception {
+    public void getAllTitlesTest()  {
         addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -85,7 +83,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getBookByAuthorTest() throws Exception {
+    public void getBookByAuthorTest()  {
         Book expectedBook = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
         Author author = expectedBook.getAuthors().get(0);
@@ -97,7 +95,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getBookByIdTest() throws Exception {
+    public void getBookByIdTest()  {
         Book expectedBook = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -108,21 +106,19 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getBookByTitleTest() throws Exception {
+    public void getBookByTitleTest()  {
         Book expectedBook1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
-        Book expectedBook2 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_3, TEST_GENRE_3);
-        addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
         List<Book> resultBooks = bookDao.getBooksByTitle(TEST_TITLE_1);
 
         assertThat(resultBooks)
                 .isNotEmpty()
-                .hasSize(2)
-                .contains(expectedBook1, expectedBook2);
+                .hasSize(1)
+                .contains(expectedBook1);
     }
 
     @Test
-    public void updateBookTitleByIdTest() throws Exception {
+    public void updateBookTitleByIdTest()  {
         Book book = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
 
         bookDao.updateBookTitleById(book.getId(), TEST_TITLE_2);
@@ -134,7 +130,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void deleteBookByIdTest() throws Exception {
+    public void deleteBookByIdTest()  {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -155,7 +151,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void deleteAllTest() throws Exception {
+    public void deleteAllTest()  {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 

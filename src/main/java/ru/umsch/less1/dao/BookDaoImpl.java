@@ -129,8 +129,8 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public int deleteAll() {
-        namedJdbc.getJdbcOperations().update("TRUNCATE books_authors");
-        return namedJdbc.getJdbcOperations().update("TRUNCATE books");
+        namedJdbc.getJdbcOperations().update("DELETE FROM books_authors");
+        return namedJdbc.getJdbcOperations().update("DELETE FROM books");
     }
 
     private static class
@@ -167,6 +167,7 @@ public class BookDaoImpl implements BookDao {
             if (name != null) {
                 Author author = new Author();
                 author.setId(resultSet.getLong("author_id"));
+                author.setBooks(Collections.emptyList());
                 author.setName(name);
                 authors.add(author);
             }

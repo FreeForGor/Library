@@ -37,6 +37,7 @@ public class LibraryIT {
     @Autowired
     private BookDaoImpl bookDao;
 
+
     @Autowired
     private AuthorDaoImpl authorDao;
 
@@ -51,7 +52,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void getAllAuthorsNamesTest() throws Exception {
+    public void getAllAuthorsNamesTest()  {
         addTestAuthor(TEST_AUTHOR_1);
         addTestAuthor(TEST_AUTHOR_2);
 
@@ -64,7 +65,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void getAllBooksTest() throws Exception {
+    public void getAllBooksTest()  {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -79,7 +80,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void getAllGenresTest() throws Exception {
+    public void getAllGenresTest()  {
         addTestGenre(TEST_GENRE_1);
         addTestGenre(TEST_GENRE_2);
 
@@ -92,7 +93,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void getBooksByAuthorsNameTest() throws Exception {
+    public void getBooksByAuthorsNameTest()  {
         addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -106,7 +107,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void addNewBookOneAuthorWhenSuccessfulTest() throws Exception {
+    public void addNewBookOneAuthorWhenSuccessfulTest()  {
         shell.evaluate(() -> "add-book " + TEST_GENRE_1 + " " + TEST_TITLE_1 + " " + TEST_AUTHOR_1);
 
         Author author = authorDao.getAuthorByName(TEST_AUTHOR_1);
@@ -119,7 +120,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void addNewBookOneAuthorWhenAlreadyExistsTest() throws Exception {
+    public void addNewBookOneAuthorWhenAlreadyExistsTest()  {
         addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
 
         Object res = shell.evaluate(() -> "add-book " + TEST_GENRE_1 + " " + TEST_TITLE_1 + " " + TEST_AUTHOR_1);
@@ -131,7 +132,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void addNewGenreWhenSuccessfulTest() throws Exception {
+    public void addNewGenreWhenSuccessfulTest()  {
         shell.evaluate(() -> "add-genre " + TEST_GENRE_1);
 
         Genre genre = genreDao.getGenreByName(TEST_GENRE_1);
@@ -140,7 +141,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void addNewGenreWhenAlreadyExistsTest() throws Exception {
+    public void addNewGenreWhenAlreadyExistsTest()  {
         addTestGenre(TEST_GENRE_1);
 
         Object res = shell.evaluate(() -> "add-genre " + TEST_GENRE_1);
@@ -152,7 +153,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void addNewAuthorTest() throws Exception {
+    public void addNewAuthorTest()  {
         shell.evaluate(() -> "add-author " + TEST_AUTHOR_1);
 
         Author author = authorDao.getAuthorByName(TEST_AUTHOR_1);
@@ -161,7 +162,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void updateBookTitleByIdTest() throws Exception {
+    public void updateBookTitleByIdTest()  {
         Book book = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Long id = book.getId();
 
@@ -172,7 +173,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void updateBookTitleByIdWhenNoBookTest() throws Exception {
+    public void updateBookTitleByIdWhenNoBookTest()  {
         Object res = shell.evaluate(() -> "upd-title-id " + 100 + " " + TEST_TITLE_2);
 
         String result = res.toString();
@@ -182,7 +183,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void deleteBookByIdTest() throws Exception {
+    public void deleteBookByIdTest()  {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -197,7 +198,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void deleteBookByIdWhenNoBookTest() throws Exception {
+    public void deleteBookByIdWhenNoBookTest()  {
         Object res = shell.evaluate(() -> "del-book " + 100);
 
         String result = res.toString();
@@ -207,7 +208,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void deleteAuthorByIdTest() throws Exception {
+    public void deleteAuthorByIdTest()  {
         Author author = addTestAuthor(TEST_AUTHOR_1);
         addTestAuthor(TEST_AUTHOR_2);
 
@@ -221,7 +222,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void deleteAuthorByIdWhenNoAuthorTest() throws Exception {
+    public void deleteAuthorByIdWhenNoAuthorTest()  {
         Object res = shell.evaluate(() -> "del-auth " + 100);
 
         String result = res.toString();
@@ -231,7 +232,7 @@ public class LibraryIT {
     }
 
     @Test
-    public void deleteGenreTest() throws Exception {
+    public void deleteGenreTest()  {
         Genre genre1 = addTestGenre(TEST_GENRE_1);
         Genre genre2 = addTestGenre(TEST_GENRE_2);
 
