@@ -12,6 +12,10 @@ INSERT INTO authors (author_name) VALUES ('М.Булгаков');
 INSERT INTO authors (author_name) VALUES ('А.Чехов');
 
 
+INSERT INTO users (user_name) VALUES ('Васян');
+INSERT INTO users (user_name) VALUES ('Стасян');
+INSERT INTO users (user_name) VALUES ('Сосян');
+
 INSERT INTO books (title, genre_id)
 VALUES ('Шерлок Холмс', (SELECT id FROM genres WHERE genre_name = 'детектив'));
 
@@ -59,3 +63,20 @@ VALUES (
            (SELECT id FROM books WHERE title = 'Идиот')
        );
 
+INSERT INTO book_comments (comment_text, comment_date, user_id, book_id)
+VALUES ('Нормас чтиво, под пивко сойдет',
+        '2020-11-23 12:12:12',
+        (SELECT id FROM users WHERE user_name = 'Васян'),
+        (SELECT id FROM books WHERE title = 'Мастер и Маргарита'));
+
+INSERT INTO book_comments (comment_text, comment_date, user_id, book_id)
+VALUES ('Классека',
+        '2020-11-23 10:10:10',
+        (SELECT id FROM users WHERE user_name = 'Стасян'),
+        (SELECT id FROM books WHERE title = 'Преступление и наказание'));
+
+INSERT INTO book_comments (comment_text, comment_date, user_id, book_id)
+VALUES ('Орали всем селом',
+        '2020-11-23 12:24:36',
+        (SELECT id FROM users WHERE user_name = 'Сосян'),
+        (SELECT id FROM books WHERE title = 'Идиот'));

@@ -16,8 +16,8 @@ public interface BookDao {
 
     Book addNewBook(Book book);
 
-    int updateBookTitleById(Long id, String newTitle);
+    boolean updateBookTitleById(Long id, String newTitle);
 
-    int deleteBookById(Long id);
+    boolean deleteBookById(Long id);
     int deleteAll();
 }

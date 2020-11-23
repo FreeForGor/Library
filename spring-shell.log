@@ -18,3 +18,50 @@
 1605859796027:help
 1605859800989:all-books
 1605859808396:all-genres
+1606119184426:start
+1606119188692:help
+1606119195283:all-books
+1606122553293:help
+1606122581414:comm-by 1
+1606122586212:comm-by 2
+1606122588482:comm-by 3
+1606122592347:comm-by 4
+1606122594694:comm-by 5
+1606132694983:upd-comm 5
+1606132716562:upd-comm 5 орали всем поселком городского пипа
+1606132887323:upd-comm 5 ораливсемпоселкомгородскогопипа
+1606132967346:upd-comm 1
+1606132982130:upd-comm 1 "Нормас чтиво, под пивко сойдет"
+1606133021456:upd-comm 1 "Нормас чтиво, под пивко сойдет!"
+1606133602953:upd-comm 1 Нормас чтиво, под пивко сойдет!
+1606133665245:upd-comm 1 Нормас.чтиво!
+1606133694412:stacktrace
+1606133748790:upd-comm 1 Нормас.чтиво!
+1606134082036:upd-comm 1 Нормас-чтиво
+1606134290796:upd-comm 1 Нормас.чтиво!
+1606134370393:upd-comm 1 Нормас-чтиво!
+1606134377578:upd-comm 1 Нормас.чтиво!
+1606134600919:upd-comm 1 Нормм.чтиво!
+1606134680045:upd-comm 1 Норм-Чтиво
+1606135127541:add-book комедия Библия Иесус,Бог
+1606135153927:stacktrace
+1606135589246:add-book комедия Библия Иесус,Бог
+1606135669550:upd-comm 1 Норм чтиво
+1606135748022:upd-comm 1 Norm-Chtivo
+1606136014502:upd-comm 1 Norm-chtivo
+1606136153039:upd-comm 1 Norm,chtivo
+1606136243725:upd-comm 4 Norm,chtivo
+1606136249665:upd-comm 1 Norm,chtivo
+1606136345450:add-comm 1 Norm,chtivo
+1606136369927:add-comm 1 Igor Norm,chtivo
+1606136388329:add-comm 4 Igor Norm,chtivo
+1606136444336:add-comm 4 Igor Hui
+1606136617873:stacktrace
+1606136914478:add-comm 4 Igor Hui
+1606136918063:add-comm 1 Igor Hui
+1606136924012:stacktrace
+1606137061545:add-comm 4 Igor Hui
+1606137894272:add-comm 1 Igor Hui
+1606137923894:upd-comm 1 hyiii
+1606138532171:upd-comm 1 hyiii,pizpa
+1606139000472:upd-comm 1 hyiii,pizpa,ошпгкпф

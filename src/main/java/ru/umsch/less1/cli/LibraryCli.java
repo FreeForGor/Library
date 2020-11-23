@@ -7,12 +7,14 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.table.*;
 import ru.umsch.less1.model.Author;
 import ru.umsch.less1.model.Book;
+import ru.umsch.less1.model.Comment;
 import ru.umsch.less1.model.Genre;
 import ru.umsch.less1.service.LibraryServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.shell.table.CellMatchers.table;
@@ -55,7 +57,7 @@ public class LibraryCli {
             @ShellOption(help = "автор") String authors) {
 
         String[] authorsArr = authors.split(",");
-        List<Author> authorList = Arrays.stream(authorsArr).map(Author::new).collect(Collectors.toList());
+        Set<Author> authorList = Arrays.stream(authorsArr).map(Author::new).collect(Collectors.toSet());
         Genre genre = new Genre(genreName);
         boolean isSuccessful = libraryService.addNewBook(new Book(title, genre, authorList));
         if (isSuccessful) {
@@ -124,6 +126,54 @@ public class LibraryCli {
             return "Жанр удален";
         } else {
             return "Жанра не существует";
+        }
+    }
+
+    @ShellMethod(value = "Коментарий по id", key = "comm-by")
+    public List<String> getAllCommentsForBook(
+            @ShellOption(help = "id книги") Long bookId) {
+        return libraryService.getAllComments(bookId);
+    }
+
+    @ShellMethod(value = "Добавить комментарий", key = "add-comm")
+    public String addNewCommentToBook(
+            @ShellOption(help = "id книги") Long bookId,
+            @ShellOption(help = "Имя пользователя") String userName,
+            @ShellOption(help = "Комментарий") String comment) {
+
+        boolean isSuccessful = libraryService.addComment(bookId, userName, comment);
+        if (isSuccessful) {
+            return "Комментарий добавлен";
+        } else {
+            return "Book with id = " + bookId + " doesn't exist";
+        }
+    }
+
+    @ShellMethod(value = "Редактировать комментарий", key = "upd-comm")
+    public String updateCommentById(
+            @ShellOption(help = "id") Long id,
+            @ShellOption(help = "Новый комментарий, слова через запятую") String newComment) {
+        String[] newCommentArr = newComment.split(",");
+        String upComm = String.join(" ", newCommentArr);
+        Comment comment = new Comment();
+        comment.setId(id);
+        comment.setCommentText(upComm);
+        boolean isSuccessful = libraryService.updateComment(comment);
+        if (isSuccessful) {
+            return "Комментарий обновлен";
+        } else {
+            return "Комментарий был удален автором или администратором сообщества";
+        }
+    }
+
+    @ShellMethod(value = "Удалить комментарий", key = "del-comm")
+    public String deleteCommentById(
+            @ShellOption(help = "id комментария") Long id) {
+        boolean isSuccessful = libraryService.deleteCommentById(id);
+        if (isSuccessful) {
+            return "Комментарий удален";
+        } else {
+            return "Комментария не существует";
         }
     }
 

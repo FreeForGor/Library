@@ -3,16 +3,13 @@ package ru.umsch.less1.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.umsch.less1.dao.AuthorDao;
-import ru.umsch.less1.dao.BookDao;
-import ru.umsch.less1.dao.GenreDaoImpl;
-import ru.umsch.less1.model.Author;
-import ru.umsch.less1.model.Book;
-import ru.umsch.less1.model.Genre;
+import ru.umsch.less1.dao.*;
+import ru.umsch.less1.model.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -20,15 +17,19 @@ import java.util.stream.Collectors;
 @Transactional
 public class LibraryServiceImpl implements LibraryService {
 
-    private final BookDao bookDao;
-    private final AuthorDao authorDao;
-    private final GenreDaoImpl genreDao;
+    private BookDao bookDao;
+    private AuthorDao authorDao;
+    private GenreDao genreDao;
+    private CommentDao commentDao;
+    private UserDao userDao;
 
     @Autowired
-    public LibraryServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDaoImpl genreDao) {
+    public LibraryServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, CommentDao commentDao, UserDao userDao) {
         this.bookDao = bookDao;
         this.authorDao = authorDao;
         this.genreDao = genreDao;
+        this.userDao = userDao;
+        this.commentDao = commentDao;
     }
 
     @Override
@@ -55,7 +56,6 @@ public class LibraryServiceImpl implements LibraryService {
     @Transactional(readOnly = true)
     public List<Book> getBooksByAuthorsName(String name) {
         Author author = authorDao.getAuthorByName(name);
-
         if (author == null) {
             return Collections.emptyList();
         }
@@ -63,9 +63,13 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
+    public List<String> getAllComments(Long bookId) {
+        return commentDao.getCommentsByBookId(bookId);
+    }
+
+    @Override
     public boolean addNewGenre(Genre genre) {
         Genre checkGenre = genreDao.getGenreByName(genre.getGenreName());
-
         if (checkGenre != null) {
             return false;
         }
@@ -77,26 +81,26 @@ public class LibraryServiceImpl implements LibraryService {
     public boolean addNewBook(Book book) {
 
         Genre genre = genreDao.getGenreByName(book.getGenre().getGenreName());
-
         if (genre == null) {
             genre = genreDao.addGenre(book.getGenre());
         }
         book.setGenre(genre);
 
-        List<Author> authorList = new ArrayList<>();
+        Set<Author> authorSet = new HashSet<>();
         for (Author author : book.getAuthors()) {
             Author checkAuthor = authorDao.getAuthorByName(author.getName());
-
             if (checkAuthor == null) {
                 author = authorDao.addNewAuthor(author);
-                authorList.add(author);
+                author.getBooks().add(book);
+                authorSet.add(author);
             } else {
-                authorList.add(checkAuthor);
+                checkAuthor.getBooks().add(book);
+                authorSet.add(checkAuthor);
             }
         }
-        book.setAuthors(authorList);
+        book.setAuthors(authorSet);
 
-        if (isBookDuplicate(book)) {
+        if(isBookDuplicate(book)) {
             return false;
         }
 
@@ -124,21 +128,46 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
+    public boolean addComment(Long bookId, String userName, String comment) {
+        Book book = bookDao.getBookById(bookId);
+        if (book == null) {
+            return false;
+        }
+
+        User user = userDao.getUserByName(userName);
+        if (user == null) {
+            user = userDao.addUser(new User(userName));
+        }
+
+        Comment com = commentDao.addComment(new Comment(book, user, comment));
+        book.getComments().add(com);
+        return true;
+    }
+
+    @Override
     public boolean updateBookTitleById(Long id, String newTitle) {
-        int result = bookDao.updateBookTitleById(id, newTitle);
-        return result > 0;
+        return bookDao.updateBookTitleById(id, newTitle);
+    }
+
+    @Override
+    public boolean updateComment(Comment comment) {
+        Comment commentToUpdate = commentDao.getCommentById(comment.getId());
+        if (commentToUpdate == null) {
+            return false;
+        }
+        commentToUpdate.setCommentDate(comment.getCommentDate());
+        commentToUpdate.setCommentText(comment.getCommentText());
+        return true;
     }
 
     @Override
     public boolean deleteBookById(Long id) {
-        int result = bookDao.deleteBookById(id);
-        return result > 0;
+        return bookDao.deleteBookById(id);
     }
 
     @Override
     public boolean deleteAuthorById(Long id) {
-        int result = authorDao.deleteAuthorById(id);
-        return result > 0;
+        return authorDao.deleteAuthorById(id);
     }
 
     @Override
@@ -147,14 +176,21 @@ public class LibraryServiceImpl implements LibraryService {
         if (genre == null) {
             return false;
         }
-        int result = genreDao.deleteGenre(genre);
-        return result > 0;
+        genreDao.deleteGenre(genre);
+        return true;
+    }
+
+    @Override
+    public boolean deleteCommentById(Long id) {
+        return commentDao.deleteCommentById(id);
     }
 
     @Override
     public void deleteAll() {
         genreDao.deleteAll();
+        userDao.deleteAll();
         authorDao.deleteAll();
         bookDao.deleteAll();
+        commentDao.deleteAll();
     }
 }
