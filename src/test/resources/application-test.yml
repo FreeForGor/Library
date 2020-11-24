@@ -1,0 +1,21 @@
+spring:
+#  datasource:
+#    url: jdbc:postgresql://127.0.0.1:5432/library
+#    username: bos
+#    password: FuqS1asuCk1488
+#    driver-class-name: org.postgresql.Driver
+#    initialization-mode: always
+#    schema: classpath*:schema.sql
+#    data: classpath*:data.sql
+#  jpa:
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+  datasource:
+    url: jdbc:h2:mem:testDB
+    username: us
+    password: pa
+    initialization-mode: always
+
+    shell:
+      interactive:
+        enabled: false

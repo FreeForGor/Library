@@ -11,10 +11,7 @@ import ru.umsch.less1.model.Comment;
 import ru.umsch.less1.model.Genre;
 import ru.umsch.less1.service.LibraryServiceImpl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.shell.table.CellMatchers.table;
@@ -129,10 +126,16 @@ public class LibraryCli {
         }
     }
 
-    @ShellMethod(value = "Коментарий по id", key = "comm-by")
+    @ShellMethod(value = "Коментарий по id книги", key = "comm-by")
     public List<String> getAllCommentsForBook(
             @ShellOption(help = "id книги") Long bookId) {
-        return libraryService.getAllComments(bookId);
+        List<String> noComo = new ArrayList<>();
+        if (libraryService.getAllComments(bookId).isEmpty()) {
+            noComo.add("Комментариев нет");
+            return noComo;
+        } else {
+            return libraryService.getAllComments(bookId);
+        }
     }
 
     @ShellMethod(value = "Добавить комментарий", key = "add-comm")
@@ -145,7 +148,7 @@ public class LibraryCli {
         if (isSuccessful) {
             return "Комментарий добавлен";
         } else {
-            return "Book with id = " + bookId + " doesn't exist";
+            return "Книга с id = " + bookId + " не существует";
         }
     }
 

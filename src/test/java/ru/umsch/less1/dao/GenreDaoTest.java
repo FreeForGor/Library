@@ -1,12 +1,13 @@
 package ru.umsch.less1.dao;
 
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.umsch.less1.model.Genre;
 
@@ -14,9 +15,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@JdbcTest
 @RunWith(SpringRunner.class)
-@Import(GenreDaoImpl.class)
+@DataJpaTest
+@DirtiesContext // база пересоздается каждый тест
+@Import({GenreDaoImpl.class})
 public class GenreDaoTest {
 
     private static final String TEST_NAME_1 = "testName";
@@ -25,10 +27,8 @@ public class GenreDaoTest {
     @Autowired
     private GenreDaoImpl dao;
 
-    @Before
-    public void init() {
-        dao.deleteAll();
-    }
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     public void addGenreTest() {
@@ -95,7 +95,7 @@ public class GenreDaoTest {
     private Genre addTestGenre(String testName) {
         Genre genre = new Genre();
         genre.setGenreName(testName);
-        genre = dao.addGenre(genre);
+        genre = entityManager.persist(genre);
         return genre;
     }
 

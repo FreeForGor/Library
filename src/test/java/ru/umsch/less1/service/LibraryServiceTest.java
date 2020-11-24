@@ -41,6 +41,12 @@ public class LibraryServiceTest {
     @MockBean
     private GenreDaoImpl genreDao;
 
+    @MockBean
+    private GenreDaoImpl CommentDao;
+
+    @MockBean
+    private GenreDaoImpl UserDao;
+
     @Autowired
     private LibraryServiceImpl libraryService;
 
@@ -49,6 +55,8 @@ public class LibraryServiceTest {
         reset(bookDao);
         reset(authorDao);
         reset(genreDao);
+        reset(CommentDao);
+        reset(UserDao);
     }
 
     @Test

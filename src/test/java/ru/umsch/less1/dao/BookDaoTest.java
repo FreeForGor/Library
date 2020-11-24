@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.umsch.less1.model.Author;
 import ru.umsch.less1.model.Book;
@@ -18,9 +19,10 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
 @RunWith(SpringRunner.class)
-@Import({AuthorDaoImpl.class, GenreDaoImpl.class, BookDaoImpl.class})
+@DataJpaTest
+@DirtiesContext // база пересоздается каждый тест
+@Import({BookDaoImpl.class})
 public class BookDaoTest {
 
     private static final String TEST_TITLE_1 = "testName";
@@ -29,18 +31,17 @@ public class BookDaoTest {
     private static final String TEST_AUTHOR_2 = "testAuthor2";
     private static final String TEST_GENRE_1 = "testGenre";
     private static final String TEST_GENRE_2 = "testGenre2";
-
-
-    @Autowired
-    private TestEntityManager entityManager;
+    private static final String TEST_GENRE_3 = "testGenre3";
+    private static final String TEST_AUTHOR_3 = "testAuthor3";
 
     @Autowired
     private BookDaoImpl bookDao;
 
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
-    public void addNewBookTest()  {
-
+    public void addNewBookTest() throws Exception {
         Book book = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
 
         List<Book> books = bookDao.getAllBooks();
@@ -51,11 +52,14 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getAllBooksTest()  {
+    public void getAllBooksTest() throws Exception {
+        List<Book> books = bookDao.getAllBooks();
+        assertThat(books).isEmpty();
+
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
-        List<Book> books = bookDao.getAllBooks();
+        books = bookDao.getAllBooks();
         assertThat(books)
                 .isNotEmpty()
                 .hasSize(2)
@@ -63,7 +67,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getAllTitlesTest()  {
+    public void getAllTitlesTest() throws Exception {
         addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -88,7 +92,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getBookByIdTest()  {
+    public void getBookByIdTest() throws Exception {
         Book expectedBook = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -99,19 +103,21 @@ public class BookDaoTest {
     }
 
     @Test
-    public void getBookByTitleTest()  {
+    public void getBookByTitleTest() throws Exception {
         Book expectedBook1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
+        Book expectedBook2 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_3, TEST_GENRE_3);
+        addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
         List<Book> resultBooks = bookDao.getBooksByTitle(TEST_TITLE_1);
 
         assertThat(resultBooks)
                 .isNotEmpty()
-                .hasSize(1)
-                .contains(expectedBook1);
+                .hasSize(2)
+                .contains(expectedBook1, expectedBook2);
     }
 
     @Test
-    public void updateBookTitleByIdTest()  {
+    public void updateBookTitleByIdTest() throws Exception {
         Book book = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
 
         bookDao.updateBookTitleById(book.getId(), TEST_TITLE_2);
@@ -123,7 +129,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void deleteBookByIdTest()  {
+    public void deleteBookByIdTest() throws Exception {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -144,7 +150,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void deleteAllTest()  {
+    public void deleteAllTest() throws Exception {
         Book book1 = addTestBookToDb(TEST_TITLE_1, TEST_AUTHOR_1, TEST_GENRE_1);
         Book book2 = addTestBookToDb(TEST_TITLE_2, TEST_AUTHOR_2, TEST_GENRE_2);
 
@@ -176,7 +182,6 @@ public class BookDaoTest {
 
         return entityManager.persist(book);
     }
-
 
     private Genre addTestGenre(String testName) {
         Genre genre = new Genre();
